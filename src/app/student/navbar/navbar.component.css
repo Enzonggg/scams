@@ -1,0 +1,244 @@
+.student-navbar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 250px;
+  height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  flex-direction: column;
+  color: white;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.navbar-header {
+  padding: 30px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logo-icon {
+  width: 45px;
+  height: 45px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+
+.logo-icon svg {
+  color: white;
+}
+
+.logo-text h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+}
+
+.navbar-menu {
+  flex: 1;
+  padding: 20px 0;
+  overflow-y: auto;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 25px;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: all 0.3s;
+  font-size: 15px;
+  font-weight: 500;
+  border-left: 3px solid transparent;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-left-color: white;
+}
+
+.nav-item.active {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border-left-color: white;
+}
+
+.nav-item svg {
+  flex-shrink: 0;
+}
+
+.navbar-footer {
+  padding: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logout-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 15px;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.logout-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.logout-btn svg {
+  flex-shrink: 0;
+}
+
+/* Mobile logout button in menu */
+.logout-mobile {
+  display: none;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.logout-mobile:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Scrollbar */
+.navbar-menu::-webkit-scrollbar {
+  width: 5px;
+}
+
+.navbar-menu::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.navbar-menu::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+.navbar-menu::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .student-navbar {
+    width: 50px;
+  }
+
+  .navbar-header {
+    padding: 10px 5px;
+  }
+
+  .logo-section {
+    justify-content: center;
+  }
+
+  .logo-text {
+    display: none;
+  }
+
+  .logo-icon {
+    width: 35px;
+    height: 35px;
+  }
+
+  .logo-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .nav-item span,
+  .logout-btn span {
+    display: none;
+  }
+
+  .nav-item,
+  .logout-btn {
+    justify-content: center;
+    padding: 12px 5px;
+  }
+
+  .nav-item svg,
+  .logout-btn svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* Show logout in menu, hide in footer on mobile */
+  .logout-mobile {
+    display: flex;
+  }
+
+  .navbar-footer {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .student-navbar {
+    width: 45px;
+  }
+
+  .navbar-header {
+    padding: 8px 3px;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .logo-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .nav-item,
+  .logout-mobile {
+    padding: 10px 3px;
+  }
+
+  .nav-item svg,
+  .logout-mobile svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Keep logout in menu on small mobile */
+  .logout-mobile {
+    display: flex;
+  }
+
+  .navbar-footer {
+    display: none;
+  }
+}
+
+@media print {
+  .student-navbar {
+    display: none;
+  }
+}

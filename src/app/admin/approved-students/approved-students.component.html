@@ -1,0 +1,275 @@
+<div class="approved-container">
+  <!-- Header -->
+  <div class="approved-header">
+    <h1 class="approved-title">Approved Students</h1>
+    <button class="btn-print-all" (click)="printAll()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+        <rect x="6" y="14" width="12" height="8"></rect>
+      </svg>
+      Print All
+    </button>
+  </div>
+
+  <!-- Global Filters -->
+  <div class="global-filters">
+    <div class="filter-group">
+      <label class="filter-label">Semester</label>
+      <select [(ngModel)]="selectedSemester" (change)="onFilterChange()" class="filter-select">
+        <option *ngFor="let semester of semesters" [value]="semester">{{ semester }}</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label class="filter-label">Academic Year</label>
+      <select [(ngModel)]="selectedAcadYear" (change)="onFilterChange()" class="filter-select">
+        <option *ngFor="let year of academicYears" [value]="year">{{ year }}</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Search and Filter Section -->
+  <div class="controls-section">
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        placeholder="Search by name..."
+        class="search-input"
+      />
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <select [(ngModel)]="filterYear" class="filter-select">
+        <option value="all">All Years</option>
+        <option value="1">Year 1</option>
+        <option value="2">Year 2</option>
+        <option value="3">Year 3</option>
+        <option value="4">Year 4</option>
+      </select>
+
+      <select [(ngModel)]="filterProgram" class="filter-select">
+        <option value="all">All Programs</option>
+        <option value="BSIT">BSIT</option>
+        <option value="BSCS">BSCS</option>
+        <option value="BSIS">BSIS</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Approved Students Table -->
+  <div class="table-container">
+    <table class="approved-table">
+      <thead>
+        <tr>
+          <th>Last Name</th>
+          <th>First Name</th>
+          <th>Year</th>
+          <th>Section</th>
+          <th>Program</th>
+          <th>Major</th>
+          <th>Date Approved</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let student of filteredStudents">
+          <td>{{ student.lastName }}</td>
+          <td>{{ student.firstName }}</td>
+          <td>{{ student.year }}</td>
+          <td>{{ student.section }}</td>
+          <td>{{ student.program }}</td>
+          <td>{{ student.major }}</td>
+          <td>{{ student.dateApproved }}</td>
+          <td>
+            <button class="btn-print" (click)="printClearance(student)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+              </svg>
+              Print
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredStudents.length === 0">
+          <td colspan="7" class="no-data">No approved students found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Print-Only Section -->
+<div class="print-only">
+  <!-- Single Student Print -->
+  <div *ngIf="selectedStudent" class="clearance-document">
+    <div class="document-header">
+      <div class="logo-section">
+        <img src="logo.jpg" alt="School Logo" class="school-logo">
+      </div>
+      <div class="school-info">
+        <h2 class="school-name">Your School Name</h2>
+        <p class="school-address">School Address Here</p>
+        <p class="school-contact">Contact: (123) 456-7890</p>
+      </div>
+    </div>
+
+    <div class="document-title">
+      <h3>STUDENT CLEARANCE FORM</h3>
+    </div>
+
+    <div class="student-details">
+      <div class="detail-row">
+        <span class="label">Student Name:</span>
+        <span class="value">{{ selectedStudent.firstName }} {{ selectedStudent.lastName }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Program:</span>
+        <span class="value">{{ selectedStudent.program }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Year:</span>
+        <span class="value">Year {{ selectedStudent.year }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Section:</span>
+        <span class="value">{{ selectedStudent.section }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Major:</span>
+        <span class="value">{{ selectedStudent.major }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Date Approved:</span>
+        <span class="value">{{ selectedStudent.dateApproved }}</span>
+      </div>
+    </div>
+
+    <div class="clearance-table-print">
+      <table>
+        <thead>
+          <tr>
+            <th>Office/Department</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Remarks</th>
+            <th>Signature</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let clearance of selectedStudent.clearances">
+            <td>{{ clearance.office }}</td>
+            <td>{{ clearance.status }}</td>
+            <td>{{ clearance.date }}</td>
+            <td>{{ clearance.remarks }}</td>
+            <td class="signature-cell"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="document-footer">
+      <p>This clearance is valid and certifies that the above-named student has no pending obligations.</p>
+      <div class="signature-section">
+        <div class="signature-line">
+          <div class="line"></div>
+          <p>Registrar's Signature</p>
+        </div>
+        <div class="signature-line">
+          <div class="line"></div>
+          <p>Date</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Print All Students -->
+  <div *ngIf="!selectedStudent" class="clearance-list">
+    <div *ngFor="let student of filteredStudents; let last = last" class="clearance-document" [class.page-break]="!last">
+      <div class="document-header">
+        <div class="logo-section">
+          <img src="logo.jpg" alt="School Logo" class="school-logo">
+        </div>
+        <div class="school-info">
+          <h2 class="school-name">Laguna State Polytechnic University</h2>
+          <p class="school-address"> L. de Leon St., Siniloan, Laguna</p>
+        </div>
+      </div>
+
+      <div class="document-title">
+        <h3>STUDENT CLEARANCE FORM</h3>
+      </div>
+
+      <div class="student-details">
+        <div class="detail-row">
+          <span class="label">Student Name:</span>
+          <span class="value">{{ student.firstName }} {{ student.lastName }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Program:</span>
+          <span class="value">{{ student.program }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Year:</span>
+          <span class="value">Year {{ student.year }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Section:</span>
+          <span class="value">{{ student.section }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Major:</span>
+          <span class="value">{{ student.major }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Date Approved:</span>
+          <span class="value">{{ student.dateApproved }}</span>
+        </div>
+      </div>
+
+      <div class="clearance-table-print">
+        <table>
+          <thead>
+            <tr>
+              <th>Office/Department</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Remarks</th>
+              <th>Signature</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let clearance of student.clearances">
+              <td>{{ clearance.office }}</td>
+              <td>{{ clearance.status }}</td>
+              <td>{{ clearance.date }}</td>
+              <td>{{ clearance.remarks }}</td>
+              <td class="signature-cell"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="document-footer">
+        <p>This clearance is valid and certifies that the above-named student has no pending obligations.</p>
+        <div class="signature-section">
+          <div class="signature-line">
+            <div class="line"></div>
+            <p>Registrar's Signature</p>
+          </div>
+          <div class="signature-line">
+            <div class="line"></div>
+            <p>Date</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

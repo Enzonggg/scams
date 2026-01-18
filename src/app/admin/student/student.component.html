@@ -1,0 +1,233 @@
+<div class="student-container">
+  <!-- Header -->
+  <div class="student-header">
+    <h1 class="student-title">Student Approval</h1>
+    <button *ngIf="selectedStudentsCount > 0" (click)="bulkApproveStudents()" class="btn-bulk-approve">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+      Approve Selected ({{ selectedStudentsCount }})
+    </button>
+  </div>
+
+  <!-- Global Filters -->
+  <div class="global-filters">
+    <div class="filter-group">
+      <label class="filter-label">Semester</label>
+      <select [(ngModel)]="selectedSemester" (change)="onFilterChange()" class="filter-select">
+        <option *ngFor="let semester of semesters" [value]="semester">{{ semester }}</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label class="filter-label">Academic Year</label>
+      <select [(ngModel)]="selectedAcadYear" (change)="onFilterChange()" class="filter-select">
+        <option *ngFor="let year of academicYears" [value]="year">{{ year }}</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Search and Filter Section -->
+  <div class="controls-section">
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+      <input 
+        type="text" 
+        [(ngModel)]="searchTerm" 
+        placeholder="Search by student number or name..."
+        class="search-input"
+      />
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <select [(ngModel)]="filterStatus" class="filter-select">
+        <option value="all">All Status</option>
+        <option value="Approved">Approved</option>
+        <option value="Pending">Pending</option>
+      </select>
+
+      <select [(ngModel)]="filterYear" class="filter-select">
+        <option value="all">All Years</option>
+        <option value="1">Year 1</option>
+        <option value="2">Year 2</option>
+        <option value="3">Year 3</option>
+        <option value="4">Year 4</option>
+      </select>
+
+      <select [(ngModel)]="filterSection" class="filter-select">
+        <option value="all">All Sections</option>
+        <option value="A">Section A</option>
+        <option value="B">Section B</option>
+        <option value="C">Section C</option>
+        <option value="D">Section D</option>
+      </select>
+
+      <select [(ngModel)]="filterProgram" class="filter-select">
+        <option value="all">All Programs</option>
+        <option value="BSIT">BSIT</option>
+        <option value="BSIS">BSIS</option>
+        <option value="BSCS">BSCS</option>
+      </select>
+
+      <select [(ngModel)]="filterMajor" class="filter-select">
+        <option value="all">All Majors</option>
+        <option value="WMAD">WMAD</option>
+        <option value="AMG">AMG</option>
+        <option value="SMP">SMP</option>
+        <option value="NETAD">NETAD</option>
+        <option value="IS">IS</option>
+        <option value="GV">GV</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Bulk Action Bar -->
+  <div class="bulk-action-bar" *ngIf="selectedStudentsCount > 0">
+    <span class="selection-count">{{ selectedStudentsCount }} student(s) selected</span>
+    <button class="btn-bulk-approve" (click)="bulkApproveStudents()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+      Approve Selected Students
+    </button>
+  </div>
+
+  <!-- Students Table -->
+  <div class="table-container">
+    <table class="students-table">
+      <thead>
+        <tr>
+          <th>
+            <input 
+              type="checkbox" 
+              [checked]="selectAll" 
+              (change)="toggleSelectAll()"
+              class="checkbox-input"
+              title="Select All"
+            />
+          </th>
+          <th>Student Number</th>
+          <th>Last Name</th>
+          <th>First Name</th>
+          <th>Middle Name</th>
+          <th>Year</th>
+          <th>Section</th>
+          <th>Program</th>
+          <th>Major</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let student of filteredStudents">
+          <td>
+            <input 
+              type="checkbox" 
+              [checked]="student.selected" 
+              (change)="toggleStudentSelection(student)"
+              class="checkbox-input"
+              title="Select to approve all clearances"
+            />
+          </td>
+          <td>{{ student.studentNumber }}</td>
+          <td>{{ student.lastName }}</td>
+          <td>{{ student.firstName }}</td>
+          <td>{{ student.middleName }}</td>
+          <td>{{ student.year }}</td>
+          <td>{{ student.section }}</td>
+          <td>{{ student.program }}</td>
+          <td>{{ student.major || 'N/A' }}</td>
+          <td>
+            <span class="status-badge" [class.approved]="student.status === 'Approved'" [class.pending]="student.status === 'Pending'">
+              {{ student.status }}
+            </span>
+          </td>
+          <td>
+            <button class="btn-view" (click)="viewStudent(student)">View & Approve</button>
+          </td>
+        </tr>
+        <tr *ngIf="filteredStudents.length === 0">
+          <td colspan="11" class="no-data">No students found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2 class="modal-title">Clearance Details</h2>
+      <button class="modal-close" (click)="closeModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-body" *ngIf="selectedStudent">
+      <!-- Student Info Card -->
+      <div>
+        <div class="student-info-card">
+          <div class="student-avatar">
+            {{ getStudentInitials(selectedStudent) }}
+          </div>
+          <div class="student-details">
+            <h3 class="student-name">{{ selectedStudent.firstName }} {{ selectedStudent.middleName }} {{ selectedStudent.lastName }}</h3>
+            <p class="student-number">{{ selectedStudent.studentNumber }}</p>
+            <p class="student-program">{{ selectedStudent.program }} {{ selectedStudent.year }}{{ selectedStudent.section }}</p>
+          </div>
+        </div>
+
+        <!-- Requirements List -->
+        <div class="requirements-section">
+          <h4 class="requirements-title">Clearance Requirements</h4>
+          <div class="requirements-list">
+            <div class="requirement-item" *ngFor="let clearance of selectedStudent.clearances">
+              <label class="requirement-checkbox-label">
+                <input 
+                  type="checkbox" 
+                  class="requirement-checkbox"
+                  [(ngModel)]="clearance.checked"
+                  [disabled]="clearance.status === 'Approved'"
+                />
+                <div class="requirement-content">
+                  <div class="requirement-header">
+                    <span class="requirement-name">{{ clearance.office }}</span>
+                    <span class="requirement-status-badge" 
+                          [class.status-approved]="clearance.status === 'Approved'" 
+                          [class.status-pending]="clearance.status === 'Pending'">
+                      {{ clearance.status }}
+                    </span>
+                  </div>
+                  <p class="requirement-remarks" *ngIf="clearance.remarks">{{ clearance.remarks }}</p>
+                  <p class="requirement-date" *ngIf="clearance.date">Approved: {{ clearance.date }}</p>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Actions -->
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="closeModal()">
+          Cancel
+        </button>
+        <button class="btn-save-changes" (click)="saveChanges()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Approve Selected
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

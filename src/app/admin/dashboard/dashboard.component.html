@@ -1,0 +1,113 @@
+<div class="dashboard-container">
+  <!-- Top Header -->
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">Dashboard</h1>
+    <div class="datetime-display">
+      <span class="calendar-icon">📅</span>
+      {{ currentDateTime }}
+    </div>
+  </div>
+
+  <!-- Global Filters -->
+  <div class="global-filters">
+    <div class="filter-group">
+      <label class="filter-label">Semester</label>
+      <select [(ngModel)]="selectedSemester" (change)="onFilterChange()" class="filter-select">
+        <option *ngFor="let semester of semesters" [value]="semester">{{ semester }}</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label class="filter-label">Academic Year</label>
+      <select [(ngModel)]="selectedAcadYear" (change)="onFilterChange()" class="filter-select">
+        <option *ngFor="let year of academicYears" [value]="year">{{ year }}</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Stats Cards Row -->
+  <div class="stats-row">
+    <!-- Total Students Card -->
+    <div class="stat-card">
+      <div class="stat-header">Total Students</div>
+      <div class="stat-content">
+        <div class="stat-icon total-icon">👥</div>
+        <div class="stat-number">{{ stats.totalStudents }}</div>
+      </div>
+    </div>
+
+    <!-- Total Requirements Card -->
+    <div class="stat-card">
+      <div class="stat-header">Total Requirements</div>
+      <div class="stat-content">
+        <div class="stat-icon requirements-icon">📋</div>
+        <div class="stat-number">{{ stats.totalRequirements }}</div>
+      </div>
+    </div>
+
+    <!-- Cleared Students Card -->
+     <div class="stat-card">
+      <div class="stat-header">Total of Approved Students</div>
+      <div class="stat-content">
+        <div class="stat-icon cleared-icon">✓</div>
+        <div class="stat-number">{{ stats.approvedStudents }}</div>
+      </div>
+    </div> 
+
+    <!-- Pending Students Card -->
+    <div class="stat-card">
+      <div class="stat-header">Pending Students</div>
+      <div class="stat-content">
+        <div class="stat-icon pending-icon">⊘</div>
+        <div class="stat-number">{{ stats.pendingStudents }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts and Activities Row -->
+  <div class="charts-row">
+    <!-- Pie Chart Card -->
+    <div class="chart-card">
+      <h3 class="card-title">Clearance Progress</h3>
+      <div class="pie-chart-container">
+        <!-- Simple CSS Pie Chart -->
+        <div class="pie-chart" 
+             [style.background]="'conic-gradient(#9b59b6 0% ' + getClearedPercentage() + '%, #3498db ' + getClearedPercentage() + '% 100%)'">
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <span class="legend-color cleared-color"></span>
+            <span class="legend-label">Cleared Students</span>
+            <span class="legend-value">{{ clearanceProgress.approved }} ({{ getClearedPercentage() }}%)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color pending-color"></span>
+            <span class="legend-label">Pending Students</span>
+            <span class="legend-value">{{ clearanceProgress.pending }} ({{ getPendingPercentage() }}%)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activities Card - COMMENTED OUT PER ADVISER REQUEST -->
+    <!-- <div class="activities-card">
+      <h3 class="card-title">Recent Activities</h3>
+      <div class="activities-list">
+        <div class="activity-item" *ngFor="let activity of recentActivities">
+          <div class="activity-icon" [class.approved]="activity.type === 'approved'" [class.rejected]="activity.type === 'rejected'">
+            {{ activity.type === 'approved' ? '✓' : '✗' }}
+          </div>
+          <div class="activity-content">
+            <p class="activity-text">
+              <strong>{{ activity.studentName }}</strong> - {{ activity.action }}
+            </p>
+            <p class="activity-time">{{ activity.timestamp }}</p>
+          </div>
+        </div>
+        <div class="no-activities" *ngIf="recentActivities.length === 0">
+          <p>No recent activities</p>
+          <small>Activities will appear here when clearances are approved</small>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</div>

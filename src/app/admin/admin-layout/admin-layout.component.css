@@ -1,0 +1,30 @@
+.admin-layout {
+  min-height: 100vh;
+}
+
+.admin-content {
+  margin-left: 200px;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+}
+
+/* Print Styles - Remove margin when printing */
+@media print {
+  .admin-content {
+    margin-left: 0 !important;
+    background-color: white !important;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-content {
+    margin-left: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-content {
+    margin-left: 45px;
+  }
+}

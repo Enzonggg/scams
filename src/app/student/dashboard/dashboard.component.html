@@ -1,0 +1,160 @@
+<div class="dashboard-container">
+  <!-- Header Section -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <h1>Clearance Dashboard</h1>
+      <p class="subtitle">Track your clearance requirements and download your certificate</p>
+    </div>
+    <button (click)="refreshRequirements()" class="refresh-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+      </svg>
+      Refresh Requirements
+    </button>
+  </div>
+
+  <!-- Global Filters -->
+  <div class="global-filters">
+    <div class="filter-group">
+      <label class="filter-label">Semester</label>
+      <select [(ngModel)]="selectedSemester" (change)="onFilterChange()" class="filter-select">
+        <option *ngFor="let semester of semesters" [value]="semester">{{ semester }}</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label class="filter-label">Academic Year</label>
+      <select [(ngModel)]="selectedAcadYear" (change)="onFilterChange()" class="filter-select">
+        <option *ngFor="let year of academicYears" [value]="year">{{ year }}</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Student Info Card -->
+  <div class="info-card">
+    <div class="student-info">
+      <div class="info-item">
+        <span class="info-label">Student Name:</span>
+        <span class="info-value">{{ studentName }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Student Number:</span>
+        <span class="info-value">{{ studentNumber }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Program:</span>
+        <span class="info-value">{{ program }} - Year {{ yearLevel }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Semester:</span>
+        <span class="info-value">{{ semester }}</span>
+      </div>
+    </div>
+    <div class="status-badge" [ngClass]="{
+      'status-approved': overallStatus === 'Approved',
+      'status-pending': overallStatus === 'Pending',
+      'status-incomplete': overallStatus === 'Incomplete'
+    }">
+      {{ overallStatus }}
+    </div>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-grid">
+    <div class="stat-card stat-completed">
+      <div class="stat-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <div class="stat-content">
+        <h3>{{ completedCount }}</h3>
+        <p>Completed</p>
+      </div>
+    </div>
+
+    <div class="stat-card stat-pending">
+      <div class="stat-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+      </div>
+      <div class="stat-content">
+        <h3>{{ pendingCount }}</h3>
+        <p>Pending</p>
+      </div>
+    </div>
+
+  
+    <div class="stat-card stat-progress">
+      <div class="stat-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+      </div>
+      <div class="stat-content">
+        <h3>{{ completionPercentage }}%</h3>
+        <p>Progress</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Requirements Table -->
+  <div class="requirements-section">
+    <h2 class="section-title">Clearance Requirements</h2>
+    <div class="table-container">
+      <table class="requirements-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Date Submitted</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let req of requirements">
+            <td data-label="Office">{{ req.office }}</td>
+            <td data-label="Requirement">{{ req.requirement }}</td>
+            <td data-label="Status">
+              <span class="status-badge-small" [ngClass]="{
+                'badge-completed': req.status === 'Completed',
+                'badge-pending': req.status === 'Pending',
+                'badge-missing': req.status === 'Missing'
+              }">
+                {{ req.status }}
+              </span>
+            </td>
+            <td data-label="Date">{{ req.dateSubmitted || '-' }}</td>
+            <td data-label="Remarks">{{ req.remarks || '-' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Download Section -->
+  <div class="download-section">
+    <div class="download-card">
+      <div class="download-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+      </div>
+      <div class="download-content">
+        <h3>Download Clearance Certificate</h3>
+        <p>Download your official clearance document once all requirements are completed</p>
+      </div>
+      <button 
+        (click)="downloadClearance()" 
+        class="download-btn"
+        [disabled]="overallStatus !== 'Approved'">
+        Download Template
+      </button>
+    </div>
+  </div>
+</div>

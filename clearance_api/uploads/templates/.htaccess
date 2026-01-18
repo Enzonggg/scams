@@ -1,0 +1,5 @@
+# Allow access to uploaded template files
+Options -Indexes
+<FilesMatch "\.(pdf|docx|doc|png|jpg|jpeg)$">
+    Allow from all
+</FilesMatch>

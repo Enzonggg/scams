@@ -1,0 +1,187 @@
+<div class="requirements-container">
+  <div class="page-header">
+    <h1>Requirements & Templates Management</h1>
+    <p class="subtitle">Manage clearance requirements and upload clearance templates</p>
+  </div>
+
+  <!-- Global Filters -->
+  <div class="global-filters">
+    <div class="filter-group">
+      <label class="filter-label">Semester</label>
+      <select [(ngModel)]="selectedSemester" (change)="onFilterChange()" class="filter-select">
+        <option *ngFor="let semester of semesters" [value]="semester">{{ semester }}</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label class="filter-label">Academic Year</label>
+      <select [(ngModel)]="selectedAcadYear" (change)="onFilterChange()" class="filter-select">
+        <option *ngFor="let year of academicYears" [value]="year">{{ year }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <!-- Post Requirements Section -->
+    <div class="card requirements-card">
+      <div class="card-header">
+        <h2>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="12" y1="18" x2="12" y2="12"></line>
+            <line x1="9" y1="15" x2="15" y2="15"></line>
+          </svg>
+          Post New Requirement
+        </h2>
+      </div>
+      <div class="card-body">
+        <form class="requirement-form">
+          <div class="form-group">
+            <label for="title">Requirement Title *</label>
+            <input 
+              type="text"
+              id="title" 
+              [(ngModel)]="newRequirement.title" 
+              name="title"
+              class="form-control" 
+              placeholder="Enter requirement title..."
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="description">Requirement Description *</label>
+            <textarea 
+              id="description" 
+              [(ngModel)]="newRequirement.description" 
+              name="description"
+              class="form-control" 
+              rows="3" 
+              placeholder="Enter requirement description..."
+            ></textarea>
+          </div>
+
+          <button type="button" (click)="addRequirement()" class="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Add Requirement
+          </button>
+        </form>
+
+        <!-- Requirements List -->
+        <div class="requirements-list">
+          <div class="requirements-list-header">
+            <h3>Posted Requirements</h3>
+          </div>
+          <div *ngIf="requirements.length === 0" class="empty-state">
+            <p>No requirements posted yet</p>
+          </div>
+          <div *ngFor="let req of requirements" class="requirement-item">
+            <div class="requirement-info">
+              <div class="requirement-header">
+                <span class="year-badge">{{ getYearLevelsText(req.yearLevels) }}</span>
+                <span class="date-text">{{ req.datePosted }}</span>
+              </div>
+              <h4 class="requirement-title">{{ req.title }}</h4>
+              <p class="requirement-description">{{ req.description }}</p>
+            </div>
+            <button (click)="deleteRequirement(req.id)" class="btn-delete" title="Delete requirement">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload Template Section -->
+    <div class="card template-card">
+      <div class="card-header">
+        <h2>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          Upload Clearance Template
+        </h2>
+      </div>
+      <div class="card-body">
+        <div class="upload-section">
+          <div class="upload-area">
+            <div class="upload-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="12" y1="18" x2="12" y2="12"></line>
+                <line x1="9" y1="15" x2="15" y2="15"></line>
+              </svg>
+            </div>
+            <h3>Choose Clearance Template File</h3>
+            <p>Supported formats: PDF, DOCX, PNG, JPG</p>
+            <input 
+              type="file" 
+              id="templateFile" 
+              (change)="onFileSelected($event)"
+              accept=".pdf,.docx,.png,.jpg,.jpeg"
+              class="file-input"
+            >
+            <label for="templateFile" class="btn btn-secondary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              Select File
+            </label>
+          </div>
+
+          <div *ngIf="selectedFile" class="file-preview">
+            <div class="file-info">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                <polyline points="13 2 13 9 20 9"></polyline>
+              </svg>
+              <span>{{ selectedFile.name }}</span>
+            </div>
+            <button (click)="uploadTemplate()" class="btn btn-success">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              Upload Template
+            </button>
+          </div>
+
+          <!-- Current Template -->
+          <div *ngIf="uploadedTemplate" class="current-template">
+            <h3>Current Template</h3>
+            <div class="template-item">
+              <div class="template-info">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                <div class="template-details">
+                  <span class="template-name">{{ uploadedTemplate }}</span>
+                  <span class="template-date">Uploaded: {{ 'Nov 29, 2025' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="!uploadedTemplate && !selectedFile" class="info-box">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <p>No template uploaded yet. Upload a clearance template that students can download and use.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

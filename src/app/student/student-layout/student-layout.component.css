@@ -1,0 +1,34 @@
+.student-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f7fa;
+}
+
+.student-content {
+  flex: 1;
+  margin-left: 250px;
+  transition: margin-left 0.3s;
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+@media (max-width: 768px) {
+  .student-content {
+    margin-left: 50px;
+    padding-bottom: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .student-content {
+    margin-left: 45px;
+    padding-bottom: 80px;
+  }
+}
+
+@media print {
+  .student-content {
+    margin-left: 0;
+  }
+}
